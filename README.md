@@ -1,1 +1,1 @@
-# care-friends-backend
+# Care Friends 백엔드
