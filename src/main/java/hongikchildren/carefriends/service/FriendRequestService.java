@@ -26,7 +26,6 @@ public class FriendRequestService {
 
 
     // 친구 요청 보내기
-    // 핸드폰 번호, 닉네임, uuid 등등 어떤 걸로 친추 보낼 건지 생각해보고 인자 수정하기
     @Transactional
     public void sendFriendRequest(Caregiver caregiver, UUID friendUUID){
 
@@ -45,7 +44,6 @@ public class FriendRequestService {
                     .caregiver(caregiver)
                     .build();
 
-            friendRequest.setStatus("pending");
             friendRequestRepository.save(friendRequest);
         } else{
             throw new RuntimeException("friend not found");
@@ -59,12 +57,11 @@ public class FriendRequestService {
         FriendRequest friendRequest = friendRequestRepository.findById(requestId)
                 .orElseThrow(()-> new RuntimeException("Friend Request not found"));
 
-        friendRequest.setStatus("accepted");
 
         Caregiver caregiver = friendRequest.getCaregiver();
         caregiver.addFriend(friendRequest.getFriend());
 
-        friendRequestRepository.save(friendRequest);
+        friendRequestRepository.delete(friendRequest);
         caregiverRepository.save(caregiver);
 
     }
@@ -75,8 +72,7 @@ public class FriendRequestService {
         FriendRequest friendRequest = friendRequestRepository.findById(requestId)
                 .orElseThrow(()->new RuntimeException("Friend Request not found"));
 
-        friendRequest.setStatus("rejected");
-        friendRequestRepository.save(friendRequest);
+        friendRequestRepository.delete(friendRequest);
     }
 
 
@@ -85,6 +81,6 @@ public class FriendRequestService {
         Friend friend = friendRepository.findById(friendId)
                 .orElseThrow(()->new RuntimeException("Friend not found"));
 
-        return friendRequestRepository.findByFriendAndStatus(friend, "pending");
+        return friendRequestRepository.findByFriend(friend);
     }
 }

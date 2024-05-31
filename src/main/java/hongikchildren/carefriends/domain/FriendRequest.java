@@ -23,7 +23,6 @@ public class FriendRequest {
     @JoinColumn(name="friendId")
     private Friend friend;
 
-    private String status; // pending, accepted, rejected
 
     @Builder
     public FriendRequest(Long id, Caregiver caregiver, Friend friend, String status) {
@@ -32,7 +31,4 @@ public class FriendRequest {
         this.friend = friend;
     }
 
-    public void setStatus(String status){
-        this.status = status;
-    }
 }
